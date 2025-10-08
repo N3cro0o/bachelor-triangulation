@@ -1,1 +1,1 @@
-"# Bachelor's Project 2025" 
+# Bachelor's Project 2025
