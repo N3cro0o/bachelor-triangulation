@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1itdq8f40fe0"]
+
+[ext_resource type="Script" uid="uid://btbj8yquhyyb3" path="res://2D/Scene/2d_root.gd" id="1_pe0dh"]
+[ext_resource type="Texture2D" uid="uid://ck7hpuwwmsirg" path="res://icon.svg" id="2_vgt4r"]
+
+[sub_resource type="Gradient" id="Gradient_65cs7"]
+
+[node name="2DRoot" type="Node2D"]
+script = ExtResource("1_pe0dh")
+
+[node name="LineLeft" type="Line2D" parent="."]
+position = Vector2(150, 600)
+points = PackedVector2Array(0, 0, 0, -1000)
+width = 3.5
+gradient = SubResource("Gradient_65cs7")
+
+[node name="LineRight" type="Line2D" parent="."]
+position = Vector2(1000, 600)
+points = PackedVector2Array(0, 0, 0, -1000)
+width = 3.5
+gradient = SubResource("Gradient_65cs7")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 350.0
+offset_bottom = 58.0
+
+[node name="MiddlePoint" type="Sprite2D" parent="."]
+scale = Vector2(0.21875, 0.21875)
+texture = ExtResource("2_vgt4r")
+
+[node name="Label" type="Label" parent="MiddlePoint"]
+offset_left = -59.42858
+offset_top = -137.14285
+offset_right = 264.5714
+offset_bottom = -70.14285
+theme_override_font_sizes/font_size = 48
+text = "asdasdasdasd"
+horizontal_alignment = 1
+
+[node name="Target" type="Sprite2D" parent="."]
+self_modulate = Color(0.99999994, 0.20609221, 0.21184775, 1)
+position = Vector2(707, 197.00002)
+scale = Vector2(0.219, 0.219)
+texture = ExtResource("2_vgt4r")
+
+[node name="Label" type="Label" parent="Target"]
+offset_left = -59.360725
+offset_top = -136.9863
+offset_right = 296.63928
+offset_bottom = -69.9863
+theme_override_font_sizes/font_size = 48
+text = "asdadwdasdaw"
