@@ -20,7 +20,8 @@ function CameraFeed({isRight}) {
 				{CameraName(isRight)}
 			</div>
 			<div>
-				sram
+				<iframe height="480" width="640" src='https://www.youtube.com/embed/P3ynj6w2tII'>
+				</iframe>
 			</div>
 		</div>
 	)

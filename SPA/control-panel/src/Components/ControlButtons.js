@@ -2,7 +2,7 @@ import './Extra.css';
 
 import Button from '@mui/material/Button';
 
-function ControlButtons({isRight, updateCam, leftAngle, updateLeft, rightAngle, updateRight}) {
+function ControlButtons({isRight, updateCam, leftAngle, updateLeft, rightAngle, updateRight, calcFunc}) {
 	return (
 		<div>
 			<div className="ButtonPanel">
@@ -29,13 +29,20 @@ function ControlButtons({isRight, updateCam, leftAngle, updateLeft, rightAngle, 
 					Rotate right
 				</Button>
 			</div>
-			<div>
+			<div className="ButtonPanel">
 				<Button variant="contained"
 					onClick={() => {
 						updateCam(!isRight);
 					}}
 				>
 					Next camera
+				</Button>
+				<Button variant="contained"
+					onClick={() => {
+						calcFunc();
+					}}
+				>
+					Find distance
 				</Button>
 			</div>
 		</div>

@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 
 import {useState, useEffect} from 'react';
 
-function OutputTable({leftAngle, rightAngle}) {
+function OutputTable({leftAngle, rightAngle, sin, cos}) {
 	const [sineDist, setSineDist] = useState(21);
 	const [cosineDist, setCosineDist] = useState(37);
 	
@@ -29,11 +29,11 @@ function OutputTable({leftAngle, rightAngle}) {
 				<TableRow>
 					<TableCell sx={{color:"#ffffff"}} align="Left"> Distance Sine </TableCell>
 					<TableCell sx={{color:"#ffffff"}} align="center"> 
-						{Math.floor(sineDist * 100) / 100} 
+						{sin} 
 					</TableCell>
 					<TableCell sx={{color:"#ffffff"}} align="Left"> Distance Cosine </TableCell>
 					<TableCell sx={{color:"#ffffff"}} align="center"> 
-						{Math.floor(cosineDist * 100) / 100} 
+						{cos} 
 					</TableCell>
 				</TableRow>
 			</TableBody>
