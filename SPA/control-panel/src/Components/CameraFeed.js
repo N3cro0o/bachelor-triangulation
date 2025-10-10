@@ -10,21 +10,36 @@ function CameraName(isRight) {
 
 function CameraFeed({isRight}) {
 	const [camName, setCamName] = useState(CameraName(isRight));
-	useEffect(() =>{
+	useEffect(() => {
 		setCamName(CameraName(isRight));
     })
 	
-	return (
-		<div>
+	if (isRight) {
+		return (
 			<div>
-				{CameraName(isRight)}
+				<div>
+					{CameraName(isRight)}
+				</div>
+				<div>
+					<iframe height="480" width="640" src="http://192.168.137.88:8889/cam0/">
+					</iframe>
+				</div>
 			</div>
+		)
+	}
+	else {
+		return (
 			<div>
-				<iframe height="480" width="640" src='https://www.youtube.com/embed/P3ynj6w2tII'>
-				</iframe>
+				<div>
+					{CameraName(isRight)}
+				</div>
+				<div>
+					<iframe height="480" width="640" src="http://192.168.137.88:8889/cam1/">
+					</iframe>
+				</div>
 			</div>
-		</div>
-	)
+		)
+	}
 }
 
 export default CameraFeed;
