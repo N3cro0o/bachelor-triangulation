@@ -1,1 +1,3 @@
 /var/www/react-test/build
+
+SPA/control-panel/node_modules/@iiot2k/gpiox/examples - node gpio handling. PWM example for Servomotor control

@@ -1,4 +1,7 @@
+import cross from './cross.png';
 import {useState, useEffect} from 'react';
+
+import './Extra.css';
 
 function CameraName(isRight) {
 	if (isRight == true) {
@@ -20,9 +23,10 @@ function CameraFeed({isRight}) {
 				<div>
 					{CameraName(isRight)}
 				</div>
-				<div>
-					<iframe height="480" width="640" src="http://192.168.137.88:8889/cam0/">
+				<div className="CamPanel">
+					<iframe className="CamFrame" height="480" width="640" style={{zIndex:3}} /*src="http://192.168.137.88:8889/cam0/"*/>
 					</iframe>
+					<img src={cross} className="CamCrosshair" />
 				</div>
 			</div>
 		)
@@ -33,13 +37,17 @@ function CameraFeed({isRight}) {
 				<div>
 					{CameraName(isRight)}
 				</div>
-				<div>
-					<iframe height="480" width="640" src="http://192.168.137.88:8889/cam1/">
+				<div className="CamPanel">
+					<iframe className="CamFrame" height="480" width="640" src="http://192.168.137.88:8889/cam1/">
 					</iframe>
+					<img src={cross} className="CamCrosshair" />
 				</div>
 			</div>
 		)
 	}
 }
 
-export default CameraFeed;
+export default CameraFeed
+
+// // // // <iframe height="480" width="640" src="http://192.168.137.88:8889/cam1/">
+					// // // // </iframe>

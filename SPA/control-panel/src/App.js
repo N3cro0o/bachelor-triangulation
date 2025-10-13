@@ -22,7 +22,7 @@ function App() {
 		if (thirdAngle <= 0.0) { return; }
 		let factor = DISTANCE / Math.sin(thirdAngle * DEG_TO_RAD);
 		const leftSide = factor * Math.sin(rightAngle * DEG_TO_RAD);
-		// Law of Sines
+		// Law of Sines 
 		factor = DISTANCE / 2.0 / Math.sin(thirdAngle / 2.0 * DEG_TO_RAD);
 		setDistanceSin(factor * Math.sin(leftAngle * DEG_TO_RAD));
 		// Law of Cosines

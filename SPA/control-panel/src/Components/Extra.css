@@ -3,3 +3,29 @@
 	margin: 10px;
 	gap: 10px;
 }
+
+.CamPanel {
+	width: 640px;
+	height: 480px;
+    justify-content: center;
+	align-items: center;
+	z-index: 100;
+	position: relative;
+}
+
+.CamCrosshair {
+	object-fit: cover;
+	max-height: 80%;
+	z-index: 100;
+	position: absolute;
+	left: 116px;
+	top: 48px;
+	opacity: 0.3;
+	pointer-events: none;
+}
+
+.CamFrame {
+	z-index: 10;
+	position: absolute;
+	left: 0px;
+}
