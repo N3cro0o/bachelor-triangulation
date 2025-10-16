@@ -15,11 +15,25 @@ const DEG_180 = 10; // %
 
 gpiox.init_gpio(PIN_OUTPUT, gpiox.GPIO_MODE_OUTPUT, 0);
 
+function transform_angle(angle) {
+	const one = (DEG_180 - DEG_0) / 180.0;
+	if (angle < 0){
+		console.log('Angle smaller than 0');
+		return DEG_0;
+	}
+	if (angle > 180){
+		console.log('Angle larger than 180');
+		return DEG_180;
+	}
+	return angle * one;
+}
+
 app.get('/', (req, res) => {
 	res.send('Hullo!');
 });
 
 app.get('/servo/:which/set-angle/:angle/', (req, res) => {
+	console.log(req.params.angle);
 	res.send(req.params);
 });
 
