@@ -6,12 +6,12 @@ const gpiox = require('@iiot2k/gpiox');
 const app = express();
 const port = 9900;
 
-const PIN_OUTPUT = 20;
+const PIN_OUTPUT = 14;
 
 const FREQUENCY = 50; // Hz
-const DEG_0 = 5; // %
+const DEG_0 = 2.5; // %
 const DEG_90 = 7.5; // %
-const DEG_180 = 10; // %
+const DEG_180 = 12.5; // %
 
 gpiox.init_gpio(PIN_OUTPUT, gpiox.GPIO_MODE_OUTPUT, 0);
 
@@ -25,7 +25,7 @@ function transform_angle(angle) {
 		console.log('Angle larger than 180');
 		return DEG_180;
 	}
-	return angle * one;
+	return angle * one + DEG_0;
 }
 
 app.get('/', (req, res) => {
@@ -33,7 +33,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/servo/:which/set-angle/:angle/', (req, res) => {
-	console.log(req.params.angle);
+	var angle = transform_angle(req.params.angle);
+	console.log(angle);
+	gpiox.pwm_gpio(PIN_OUTPUT, FREQUENCY, angle);
 	res.send(req.params);
 });
 

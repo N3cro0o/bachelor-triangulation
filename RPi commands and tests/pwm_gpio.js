@@ -8,14 +8,14 @@
 
 "use strict";
 
-const gpiox = require("../SPA/control-panel/node_modules/@iiot2k/gpiox/gpoix");
+const gpiox = require("../SPA/control-panel/node_modules/@iiot2k/gpiox/");
 
-const PIN_OUTPUT = 20;
+const PIN_OUTPUT = 14;
 
-const FREQUENCY = 50; // Hz
-const DUTY_CYCLE1 = 5; // %
+const FREQUENCY = 50; // Hz, 20 ms
+const DUTY_CYCLE1 = 2.5; // %
 const DUTY_CYCLE2 = 7.5; // %
-const DUTY_CYCLE3 = 10; // %
+const DUTY_CYCLE3 = 12.5; // %
 
 console.log("*** pwm gpio node.js example ***");
 console.log("stop program with Ctrl+C");
