@@ -2,35 +2,55 @@ use tide::Request;
 use tide::prelude::*;
 
 use std::time;
-use rppal::pwm::{Channel, Polarity, Pwm};
 
+use rppal::pwm::{Channel, Polarity, Pwm, Result};
+
+const PORT: u32 = 8800;
 const PERIOD_MS: u64 = 20; // ms
 const PULSE_0: u64 = 500; // μs
 const PULSE_90: u64 = 1450; // μs
 const PULSE_180: u64 = 2400; // μs
 
-static mut servo0;
+static mut servo0: Result<Pwm> = Pwm::with_period(Channel::Pwm0, time::Duration::from_millis(PERIOD_MS),
+			time::Duration::from_micros(PULSE_90), Polarity::Normal, true);
 
 fn translate_angle(angle: isize) -> u64 {
-	
+	let one: f32 = (PULSE_180 - PULSE_0) as f32 / 180.0;
+	if angle < 0 {
+		println!("Angle smaller than 0");
+		return PULSE_0;
+	}
+	if angle > 180{
+		println!("Angle larger than 180");
+		return PULSE_180;
+	}
+	return (angle as f32 * one) as u64 + PULSE_0;
 }
 
 #[async_std::main]
 async fn main() -> tide::Result<()> {
-	servo0 = Pwm::with_period(Channel::Pwm0, time::Duration::from_millis(PERIOD_MS),
-			time::Duration::from_millis(PULSE_180), Polarity::Normal, true)?;
-	
     let mut app = tide::new();
 	app.at("/").get(check_connection);
-	app.listen("127.0.0.1:8800").await?;
+	app.at("/servo/:which/set-angle/:angle").get(move_servo);
+	app.at("/servo/reset").get(|req: Request<()>| {
+		println!("Reset both servo angles");
+		servo0.set_pulse_width(time::Duration::from_micros(PULSE_90));
+		// add second servo
+	});
+	println!("Listening on localhost:{PORT}");
+	app.listen(format!("127.0.0.1:{PORT}")).await?;
 	Ok(())
 }
 
-async fn check_connection (mut req: Request<()>) -> tide::Result {
+async fn check_connection (req: Request<()>) -> tide::Result {
 	Ok(String::from("Connection check: works").into())
 }
 
-async fn move_servo (mut req: Request<()>) -> tide::Result {
-	let angle = 
+async fn move_servo (req: Request<()>) -> tide::Result {
+	let angle_req: isize = req.param("angle")?.parse().unwrap_or_default();
+	let servo_req: String = String::from(req.param("which")?);
+	let angle = translate_angle(angle_req);
+	
+	servo0.set_pulse_width(time::Duration::from_micros(angle));
 	Ok(format!("Moved servo to angle: {angle}").into())
 }
