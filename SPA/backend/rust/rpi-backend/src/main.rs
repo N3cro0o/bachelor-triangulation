@@ -11,8 +11,19 @@ const PULSE_0: u64 = 500; // μs
 const PULSE_90: u64 = 1450; // μs
 const PULSE_180: u64 = 2400; // μs
 
-static mut servo0: Result<Pwm> = Pwm::with_period(Channel::Pwm0, time::Duration::from_millis(PERIOD_MS),
-			time::Duration::from_micros(PULSE_90), Polarity::Normal, true);
+#[derive(Clone)]
+struct ServoState {
+	pub servo: Pwm,
+}
+
+impl ServoState{
+	pub fn default() -> ServoState {
+		ServoState {
+			servo: Pwm::with_period(Channel::Pwm0, time::Duration::from_millis(PERIOD_MS),
+					time::Duration::from_micros(PULSE_0), Polarity::Normal, false);
+		}
+	}
+}
 
 fn translate_angle(angle: isize) -> u64 {
 	let one: f32 = (PULSE_180 - PULSE_0) as f32 / 180.0;
@@ -29,13 +40,17 @@ fn translate_angle(angle: isize) -> u64 {
 
 #[async_std::main]
 async fn main() -> tide::Result<()> {
-    let mut app = tide::new();
+	let mut state = ServoState::default();
+	state.servo = Pwm::with_period(Channel::Pwm0, time::Duration::from_millis(PERIOD_MS),
+			time::Duration::from_micros(PULSE_90), Polarity::Normal, true);
+    let mut app = tide::with_state(state);
 	app.at("/").get(check_connection);
 	app.at("/servo/:which/set-angle/:angle").get(move_servo);
-	app.at("/servo/reset").get(|req: Request<()>| {
+	app.at("/servo/reset").get(|req: Request<()>| async move {
 		println!("Reset both servo angles");
-		servo0.set_pulse_width(time::Duration::from_micros(PULSE_90));
+		req.state.servo.set_pulse_width(time::Duration::from_micros(PULSE_90));
 		// add second servo
+		Ok(String::from("Operation done!").into())
 	});
 	println!("Listening on localhost:{PORT}");
 	app.listen(format!("127.0.0.1:{PORT}")).await?;
