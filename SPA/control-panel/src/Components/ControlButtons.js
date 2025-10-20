@@ -2,7 +2,7 @@ import './Extra.css';
 
 import Button from '@mui/material/Button';
 
-function ControlButtons({isRight, updateCam, leftAngle, updateLeft, rightAngle, updateRight, calcFunc}) {
+function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rightAngle, updateRight, calcFunc}) {
 	return (
 		<div>
 			<div className="ButtonPanel">
@@ -10,9 +10,21 @@ function ControlButtons({isRight, updateCam, leftAngle, updateLeft, rightAngle, 
 					onClick={() => {
 						if (isRight) {
 							updateRight(rightAngle - 1);
+							fetch('http://localhost:8800/servo/right/set-angle/' + rightAngle, {
+								method: 'POST', 
+								body: keyHost
+							})
+								.then(result => result.text()
+								.then(body => console.log(body)));
 						}
 						else {
 							updateLeft(leftAngle + 1);
+							fetch('http://localhost:8800/servo/left/set-angle/' + leftAngle, {
+								method: 'POST', 
+								body: keyHost
+							})
+								.then(result => result.text()
+								.then(body => console.log(body)));
 						}}}
 				>
 					Rotate left
@@ -21,9 +33,21 @@ function ControlButtons({isRight, updateCam, leftAngle, updateLeft, rightAngle, 
 					onClick={() => {
 						if (isRight) {
 							updateRight(rightAngle + 1);
+							fetch('http://localhost:8800/servo/right/set-angle/' + rightAngle, {
+								method: 'POST', 
+								body: keyHost
+							})
+								.then(result => result.text()
+								.then(body => console.log(body)));
 						}
 						else {
 							updateLeft(leftAngle - 1);
+							fetch('http://localhost:8800/servo/left/set-angle/' + leftAngle, {
+								method: 'POST', 
+								body: keyHost
+							})
+								.then(result => result.text()
+								.then(body => console.log(body)));
 						}}}
 				>
 					Rotate right

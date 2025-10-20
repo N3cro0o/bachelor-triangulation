@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
 
 
@@ -17,6 +17,7 @@ function App() {
 	const [moveRight, setMoveRight] = useState(false);
 	const [distanceSin, setDistanceSin] = useState(0.0);
 	const [distanceCos, setDistanceCos] = useState(0.0);
+	const [hostKey, setHostKey] = useState(0);
 	
 	function CalcDistance() {
 		const thirdAngle = 180.0 - leftAngle - rightAngle;
@@ -32,6 +33,51 @@ function App() {
 		setDistanceCos(Math.sqrt(output));
 	}
 	
+	const freeHostKey = async () => {
+		if (hostKey >= 2137) {
+			const requestOpt = {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: hostKey
+			};
+			const response = await fetch("http://localhost:8800/host/free", requestOpt);
+			if (response.ok){
+				const data = await response.text();
+				console.log(data);
+				setHostKey(Number(data));
+				console.log(hostKey);
+			}
+		}
+	};
+
+	window.addEventListener('beforeunload', (event) => {
+		event.preventDefault();
+		
+		freeHostKey();
+		
+		event.returnValue = 'If you had taken HOST KEY, it will be dropped.';
+	});
+	
+	useEffect(() => {
+		const getHostKey = async () => {
+			if (hostKey < 2137) {
+				const requestOpt = {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' }
+				};
+				const response = await fetch("http://localhost:8800/host/obtain", requestOpt);
+				if (response.ok){
+					const data = await response.text();
+					console.log(data);
+					setHostKey(Number(data));
+					console.log(hostKey);
+				}
+			}
+		}
+		
+		getHostKey();
+	});
+	
 	return (
 	<div className="App">
 		<div className="App-body App-head">
@@ -40,7 +86,7 @@ function App() {
 		</div>
 		<div className="App-body">
 			<CameraFeed isRight={moveRight} />
-			<ControlButtons isRight={moveRight} updateCam={setMoveRight}
+			<ControlButtons keyHost={hostKey} isRight={moveRight} updateCam={setMoveRight}
 				leftAngle={leftAngle} updateLeft={setLeftAngle}
 				rightAngle={rightAngle} updateRight={setRightAngle} calcFunc={CalcDistance}/>
 			<OutputTable leftAngle={leftAngle} rightAngle={rightAngle} sin={distanceSin} cos={distanceCos}/>

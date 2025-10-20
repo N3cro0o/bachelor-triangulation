@@ -7,4 +7,4 @@ edition = "2024"
 tide = "^0.16.0"
 async-std = { version = "^1.13.0", features = ["attributes"] }
 serde = { version = "^1.0", features = ["derive"] }
-rppal = "0.22.1"
+rand = "0.9.2"
