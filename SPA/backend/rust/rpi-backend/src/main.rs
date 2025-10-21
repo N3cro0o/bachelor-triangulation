@@ -1,4 +1,4 @@
-use rpi_backend::gpio::{test, PULSE_0, PULSE_180, PULSE_90};
+use rpi_backend::gpio::{SERVO0_VALUE, PULSE_0, PULSE_180, PULSE_90};
 
 use tide::{Request, Response, StatusCode};
 use rand::prelude::*;
@@ -45,7 +45,7 @@ async fn main() -> tide::Result<()> {
 	let mut app = tide::with_state(ServerState::default());
 	app.at("/").get(check_connection);
 	app.at("/servo/:which/set-angle/:angle").post(move_servo);
-	app.at("/servo/reset").get(reset_servo);
+	app.at("/servo/reset").post(reset_servo);
 	app.at("/host/check").get(host_check);
 	app.at("/host/obtain").post(host_get);
 	app.at("/host/free").patch(host_free);
@@ -66,11 +66,13 @@ async fn move_servo (mut req: Request<(ServerState)>) -> tide::Result {
 		let servo_req: String = String::from(req.param("which")?);
 		let angle = translate_angle(angle_req);
 		if req.param("which")?.to_lowercase() == "left" {
+			// for now
+			let mut data = SERVO0_VALUE.lock().unwrap();
+			*data = angle;
 		}
 		else if req.param("which")?.to_lowercase() == "right" {
+			return Ok(format!("Not yet implemented").into());
 		}
-		let mut data = SERVO0_VALUE.lock().unwrap();
-		*data = angle;
 		
 		return Ok(format!("Moved servo to angle: {angle}").into());
 	}
@@ -80,10 +82,17 @@ async fn move_servo (mut req: Request<(ServerState)>) -> tide::Result {
 }
 
 async fn reset_servo (req: Request<(ServerState)>) -> tide::Result {
-	println!("Reset both servo angles");
-    let mut data = SERVO0_VALUE.lock().unwrap();
-    *data = PULSE_90;
-	Ok(String::from("Operation done!").into())
+	let key_string = req.body_string().await?;
+	let key: u64 = key_string.parse()?;
+	if key == req.state().key.load(Ordering::SeqCst) {
+		println!("Reset both servo angles");
+		let mut data = SERVO0_VALUE.lock().unwrap();
+		*data = PULSE_90;
+		Ok(String::from("Operation done!").into())
+	}
+	let mut response = Response::new(418);
+	response.set_body("Wrong HOST KEY.");
+	Ok(response)
 }
 
 async fn host_check(req: Request<(ServerState)>) -> tide::Result {

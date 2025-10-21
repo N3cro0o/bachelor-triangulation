@@ -59,6 +59,21 @@ function App() {
 	});
 	
 	useEffect(() => {
+		const resetServo = async () => {
+			if (hostKey < 2137) {
+				const requestOpt = {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: hostKey
+				};
+				const response = await fetch("http://localhost:8800/servo/reset", requestOpt);
+				if (response.ok){
+					const data = await response.text();
+					console.log(data);
+				}
+			}
+		}
+		
 		const getHostKey = async () => {
 			if (hostKey < 2137) {
 				const requestOpt = {
@@ -71,6 +86,7 @@ function App() {
 					console.log(data);
 					setHostKey(Number(data));
 					console.log(hostKey);
+					await resetServo();
 				}
 			}
 		}
