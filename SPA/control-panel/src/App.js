@@ -40,7 +40,7 @@ function App() {
 				headers: { 'Content-Type': 'application/json' },
 				body: hostKey
 			};
-			const response = await fetch("http://localhost:8800/host/free", requestOpt);
+			const response = await fetch("/api/host/free", requestOpt);
 			if (response.ok){
 				const data = await response.text();
 				console.log(data);
@@ -49,24 +49,16 @@ function App() {
 			}
 		}
 	};
-
-	window.addEventListener('beforeunload', (event) => {
-		event.preventDefault();
-		
-		freeHostKey();
-		
-		event.returnValue = 'If you had taken HOST KEY, it will be dropped.';
-	});
 	
 	useEffect(() => {
-		const resetServo = async () => {
+		const resetServo = async (key) => {
 			if (hostKey < 2137) {
 				const requestOpt = {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: hostKey
+					body: key
 				};
-				const response = await fetch("http://localhost:8800/servo/reset", requestOpt);
+				const response = await fetch("/api/servo/reset", requestOpt);
 				if (response.ok){
 					const data = await response.text();
 					console.log(data);
@@ -80,18 +72,35 @@ function App() {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' }
 				};
-				const response = await fetch("http://localhost:8800/host/obtain", requestOpt);
+				const response = await fetch("/api/host/obtain", requestOpt);
 				if (response.ok){
 					const data = await response.text();
 					console.log(data);
 					setHostKey(Number(data));
 					console.log(hostKey);
-					await resetServo();
+					await resetServo(Number(data));
 				}
 			}
 		}
-		
+
+
+		const checkConnection = async () => {
+			const response = await fetch("/api/");
+			if (response.ok){
+				const data = await response.text();
+				console.log(data);
+			}
+		}
+		// checkConnection();
 		getHostKey();
+
+		window.addEventListener('beforeunload', (event) => {
+			event.preventDefault();
+		
+			freeHostKey();
+		
+			event.returnValue = 'If you had taken HOST KEY, it will be dropped.';
+		});
 	});
 	
 	return (

@@ -10,7 +10,7 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 					onClick={() => {
 						if (isRight) {
 							updateRight(rightAngle - 1);
-							fetch('http://localhost:8800/servo/right/set-angle/' + rightAngle, {
+							fetch('/api/servo/right/set-angle/' + (rightAngle - 1), {
 								method: 'POST', 
 								body: keyHost
 							})
@@ -19,7 +19,7 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 						}
 						else {
 							updateLeft(leftAngle + 1);
-							fetch('http://localhost:8800/servo/left/set-angle/' + leftAngle, {
+							fetch('/api/servo/left/set-angle/' + (leftAngle + 1), {
 								method: 'POST', 
 								body: keyHost
 							})
@@ -33,7 +33,7 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 					onClick={() => {
 						if (isRight) {
 							updateRight(rightAngle + 1);
-							fetch('http://localhost:8800/servo/right/set-angle/' + rightAngle, {
+							fetch('/api/servo/right/set-angle/' + (rightAngle + 1), {
 								method: 'POST', 
 								body: keyHost
 							})
@@ -42,7 +42,7 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 						}
 						else {
 							updateLeft(leftAngle - 1);
-							fetch('http://localhost:8800/servo/left/set-angle/' + leftAngle, {
+							fetch('/api/servo/left/set-angle/' + (leftAngle - 1), {
 								method: 'POST', 
 								body: keyHost
 							})

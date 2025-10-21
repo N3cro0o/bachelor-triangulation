@@ -1,6 +1,9 @@
-use rpi_backend::gpio::{SERVO0_VALUE, PULSE_0, PULSE_180, PULSE_90};
+use rpi_backend::gpio::{SERVO0_VALUE, PULSE_0, PULSE_180, PULSE_90, servo_thread};
 
 use tide::{Request, Response, StatusCode};
+use tide::security::{CorsMiddleware, Origin};
+use http_types::headers::HeaderValue;
+
 use rand::prelude::*;
 
 use std::time;
@@ -40,9 +43,15 @@ impl ServerState {
 
 #[async_std::main]
 async fn main() -> tide::Result<()> {
-	test();
+    let cors = CorsMiddleware::new()
+        .allow_methods("GET, POST, PATCH".parse::<HeaderValue>().unwrap())
+        .allow_origin(Origin::from("*"));
+    
+    dbg!(&cors);
+
 	let thread_handle = std::thread::spawn(servo_thread);	
 	let mut app = tide::with_state(ServerState::default());
+    app.with(cors);
 	app.at("/").get(check_connection);
 	app.at("/servo/:which/set-angle/:angle").post(move_servo);
 	app.at("/servo/reset").post(reset_servo);
@@ -81,14 +90,14 @@ async fn move_servo (mut req: Request<(ServerState)>) -> tide::Result {
 	Ok(response)
 }
 
-async fn reset_servo (req: Request<(ServerState)>) -> tide::Result {
+async fn reset_servo (mut req: Request<(ServerState)>) -> tide::Result {
 	let key_string = req.body_string().await?;
 	let key: u64 = key_string.parse()?;
 	if key == req.state().key.load(Ordering::SeqCst) {
 		println!("Reset both servo angles");
 		let mut data = SERVO0_VALUE.lock().unwrap();
 		*data = PULSE_90;
-		Ok(String::from("Operation done!").into())
+		return Ok(String::from("Operation done!").into());
 	}
 	let mut response = Response::new(418);
 	response.set_body("Wrong HOST KEY.");

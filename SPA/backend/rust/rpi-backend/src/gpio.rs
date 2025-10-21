@@ -27,7 +27,7 @@ pub fn servo_thread() {
 			    pulse = *data;
 			    println!("New pulse: {pulse}");
 			    servo_pin.set_pwm(time::Duration::from_millis(PERIOD_MS), time::Duration::from_micros(pulse));
-                std::thread::sleep(time::Duration::from_millis(10));
+                std::thread::sleep(time::Duration::from_millis(300));
 		    }
         }
 	}
