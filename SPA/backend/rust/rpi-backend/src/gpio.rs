@@ -1,4 +1,5 @@
 use rppal::gpio::Gpio;
+use rppal::pwm::*;
 
 use std::time;
 use std::sync::Mutex;
@@ -6,8 +7,8 @@ use std::sync::Mutex;
 pub static SERVO0_VALUE: Mutex<u64> = Mutex::new(PULSE_90);
 pub static SERVO1_VALUE: Mutex<u64> = Mutex::new(PULSE_90);
 
-pub const SERVO_PORT_0: u8 = 14;
-pub const SERVO_PORT_1: u8 = 15;
+pub const CHIP_SERVO_0: u8 = 0;
+pub const CHIP_SERVO_1: u8 = 1;
 pub const PERIOD_MS: u64 = 20; // ms
 pub const PULSE_0: u64 = 500; // μs
 pub const PULSE_90: u64 = 1450; // μs
@@ -18,16 +19,19 @@ pub fn test(){
 }
 
 pub fn servo_thread() {
-	let mut servo_pin = Gpio::new().unwrap().get(SERVO_PORT_0).unwrap().into_output();
-	let mut pulse = PULSE_0;
+	let mut servo_pwm = Pwm::with_pwmchip(CHIP_SERVO_0, 0).unwrap();
+    servo_pwm.set_period(time::Duration::from_millis(PERIOD_MS));
+    servo_pwm.set_pulse_width(time::Duration::from_micros(PULSE_90));
+    servo_pwm.set_polarity(Polarity::Normal);
+    servo_pwm.enable();
+    let mut pulse = PULSE_90;
 	loop {
         {
 		    let data = SERVO0_VALUE.lock().unwrap();
 		    if pulse != *data {
 			    pulse = *data;
 			    println!("New pulse: {pulse}");
-			    servo_pin.set_pwm(time::Duration::from_millis(PERIOD_MS), time::Duration::from_micros(pulse));
-                std::thread::sleep(time::Duration::from_millis(300));
+                servo_pwm.set_pulse_width(time::Duration::from_micros(pulse));
 		    }
         }
 	}
