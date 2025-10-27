@@ -25,7 +25,7 @@ pub fn servo_thread() {
     servo0_pwm.set_polarity(Polarity::Normal);
     servo0_pwm.enable();
 	
-	let mut servo1_pwm = Pwm::with_pwmchip(CHIP_SERVO_1, 0).unwrap();
+	let mut servo1_pwm = Pwm::with_pwmchip(CHIP_SERVO_0, 1).unwrap();
     servo1_pwm.set_period(time::Duration::from_millis(PERIOD_MS));
     servo1_pwm.set_pulse_width(time::Duration::from_micros(PULSE_90));
     servo1_pwm.set_polarity(Polarity::Normal);

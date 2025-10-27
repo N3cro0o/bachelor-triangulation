@@ -58,7 +58,7 @@ async fn main() -> tide::Result<()> {
 	app.at("/servo/reset").post(reset_servo);
 	app.at("/host/check").get(host_check);
 	app.at("/host/obtain").post(host_get);
-	app.at("/host/free").patch(host_free);
+	app.at("/host/free").post(host_free);
 	println!("Listening on localhost:{PORT}");
 	app.listen(format!("127.0.0.1:{PORT}")).await?;
 	Ok(())
@@ -82,12 +82,12 @@ async fn move_servo (mut req: Request<(ServerState)>) -> tide::Result {
 		}
 		else if which_servo == "right" {
 			let mut data = SERVO1_VALUE.lock().unwrap();
-			*data = angle;
+			*data = PULSE_180 - angle + PULSE_0;
 		}
 		else {
 			let mut response = Response::new(418);
 			response.set_body("Wrong WHICH servo parameter.");
-			return (response)
+			return Ok(response)
 		}
 		
 		return Ok(format!("Moved {which_servo} servo to angle: {angle}").into());

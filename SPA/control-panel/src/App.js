@@ -36,7 +36,7 @@ function App() {
 	const freeHostKey = async () => {
 		if (hostKey >= 2137) {
 			const requestOpt = {
-				method: 'PATCH',
+				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: hostKey
 			};
