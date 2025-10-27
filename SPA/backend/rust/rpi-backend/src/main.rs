@@ -1,4 +1,5 @@
-use rpi_backend::gpio::{SERVO0_VALUE, PULSE_0, PULSE_180, PULSE_90, servo_thread};
+use rpi_backend::gpio::{SERVO0_VALUE, SERVO1_VALUE};
+use rpi_backend::gpio::{PULSE_0, PULSE_180, PULSE_90, servo_thread};
 
 use tide::{Request, Response, StatusCode};
 use tide::security::{CorsMiddleware, Origin};
@@ -74,16 +75,22 @@ async fn move_servo (mut req: Request<(ServerState)>) -> tide::Result {
 		let angle_req: isize = req.param("angle")?.parse().unwrap_or_default();
 		let servo_req: String = String::from(req.param("which")?);
 		let angle = translate_angle(angle_req);
-		if req.param("which")?.to_lowercase() == "left" {
-			// for now
+		let which_servo = req.param("which")?.to_lowercase();
+		if which_servo == "left" {
 			let mut data = SERVO0_VALUE.lock().unwrap();
 			*data = angle;
 		}
-		else if req.param("which")?.to_lowercase() == "right" {
-			return Ok(format!("Not yet implemented").into());
+		else if which_servo == "right" {
+			let mut data = SERVO1_VALUE.lock().unwrap();
+			*data = angle;
+		}
+		else {
+			let mut response = Response::new(418);
+			response.set_body("Wrong WHICH servo parameter.");
+			return (response)
 		}
 		
-		return Ok(format!("Moved servo to angle: {angle}").into());
+		return Ok(format!("Moved {which_servo} servo to angle: {angle}").into());
 	}
 	let mut response = Response::new(418);
 	response.set_body("Wrong HOST KEY.");
@@ -95,8 +102,16 @@ async fn reset_servo (mut req: Request<(ServerState)>) -> tide::Result {
 	let key: u64 = key_string.parse()?;
 	if key == req.state().key.load(Ordering::SeqCst) {
 		println!("Reset both servo angles");
-		let mut data = SERVO0_VALUE.lock().unwrap();
-		*data = PULSE_90;
+		{
+			let mut data = SERVO0_VALUE.lock().unwrap();
+			*data = PULSE_90;
+		}
+		std::thread::sleep(time::Duration::from_millis(100));
+		{
+			let mut data = SERVO1_VALUE.lock().unwrap();
+			*data = PULSE_90;
+		}
+		std::thread::sleep(time::Duration::from_millis(100));
 		return Ok(String::from("Operation done!").into());
 	}
 	let mut response = Response::new(418);
