@@ -4,13 +4,26 @@ import Button from '@mui/material/Button';
 
 function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rightAngle, updateRight, calcFunc}) {
 	return (
-		<div>
-			<div className="ButtonPanel">
-				<Button variant="contained"
-					onClick={() => {
+		<div className="Wide">
+			<div className="ButtonPanel Center">
+				<Button variant="contained" className="ControlButton"
+					onClick={(e) => {
+						let value;
+						if (e.shiftKey){
+							value = 5
+						}
+						else if (e.ctrlKey){
+							value = 20;
+						}
+						else {
+							value = 1;
+						}
 						if (isRight) {
-							updateRight(rightAngle - 1);
-							fetch('/api/servo/right/set-angle/' + (rightAngle - 1), {
+							if (rightAngle - value < 0){
+								value = rightAngle;
+							}
+							updateRight(rightAngle - value);
+							fetch('/api/servo/right/set-angle/' + (rightAngle - value), {
 								method: 'POST', 
 								body: keyHost
 							})
@@ -18,8 +31,11 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 								.then(body => console.log(body)));
 						}
 						else {
-							updateLeft(leftAngle + 1);
-							fetch('/api/servo/left/set-angle/' + (leftAngle + 1), {
+							if (leftAngle + value > 180){
+								value = 180 - leftAngle;
+							}
+							updateLeft(leftAngle + value);
+							fetch('/api/servo/left/set-angle/' + (leftAngle + value), {
 								method: 'POST', 
 								body: keyHost
 							})
@@ -29,11 +45,31 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 				>
 					Rotate left
 				</Button>
-				<Button variant="contained"
+				<Button variant="contained" className="ControlButton"
 					onClick={() => {
+						updateCam(!isRight);
+					}}
+				>
+					Next camera
+				</Button>
+				<Button variant="contained" className="ControlButton"
+					onClick={(e) => {
+						let value;
+						if (e.shiftKey){
+							value = 5
+						}
+						else if (e.ctrlKey){
+							value = 20;
+						}
+						else {
+							value = 1;
+						}
 						if (isRight) {
-							updateRight(rightAngle + 1);
-							fetch('/api/servo/right/set-angle/' + (rightAngle + 1), {
+							if (rightAngle + value > 180){
+								value = 180 - rightAngle;
+							}
+							updateRight(rightAngle + value);
+							fetch('/api/servo/right/set-angle/' + (rightAngle + value), {
 								method: 'POST', 
 								body: keyHost
 							})
@@ -41,8 +77,11 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 								.then(body => console.log(body)));
 						}
 						else {
-							updateLeft(leftAngle - 1);
-							fetch('/api/servo/left/set-angle/' + (leftAngle - 1), {
+							if (leftAngle - value < 0){
+								value = leftAngle;
+							}
+							updateLeft(leftAngle - value);
+							fetch('/api/servo/left/set-angle/' + (leftAngle - value), {
 								method: 'POST', 
 								body: keyHost
 							})
@@ -53,15 +92,8 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 					Rotate right
 				</Button>
 			</div>
-			<div className="ButtonPanel">
-				<Button variant="contained"
-					onClick={() => {
-						updateCam(!isRight);
-					}}
-				>
-					Next camera
-				</Button>
-				<Button variant="contained"
+			<div className="ButtonPanel Center">
+				<Button variant="contained" className="ControlButton"
 					onClick={() => {
 						calcFunc();
 					}}

@@ -29,11 +29,11 @@ function OutputTable({leftAngle, rightAngle, sin, cos}) {
 				<TableRow>
 					<TableCell sx={{color:"#ffffff"}} align="Left"> Distance Sine </TableCell>
 					<TableCell sx={{color:"#ffffff"}} align="center"> 
-						{sin} 
+						{Math.round(sin * 100) / 100} 
 					</TableCell>
 					<TableCell sx={{color:"#ffffff"}} align="Left"> Distance Cosine </TableCell>
 					<TableCell sx={{color:"#ffffff"}} align="center"> 
-						{cos} 
+						{Math.round(cos * 100) / 100} 
 					</TableCell>
 				</TableRow>
 			</TableBody>

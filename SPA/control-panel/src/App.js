@@ -7,9 +7,10 @@ import Button from '@mui/material/Button';
 import CameraFeed from './Components/CameraFeed.js';
 import OutputTable from './Components/OutputTable.js';
 import ControlButtons from './Components/ControlButtons.js';
+import ControlSlider from './Components/ControlSlider.js';
 
-const DISTANCE = 20; // Distance between camera points [cm]
 const DEG_TO_RAD = Math.PI / 180;
+const USER_DISTANCE = 40; // cm
 
 function App() {
 	const [leftAngle, setLeftAngle] = useState(90.0);
@@ -18,18 +19,21 @@ function App() {
 	const [distanceSin, setDistanceSin] = useState(0.0);
 	const [distanceCos, setDistanceCos] = useState(0.0);
 	const [hostKey, setHostKey] = useState(0);
+	const [userDistance, setUserDistance] = useState(50);
 	
 	function CalcDistance() {
 		const thirdAngle = 180.0 - leftAngle - rightAngle;
 		if (thirdAngle <= 0.0) { return; }
-		let factor = DISTANCE / Math.sin(thirdAngle * DEG_TO_RAD);
+		let factor = USER_DISTANCE / Math.sin(thirdAngle * DEG_TO_RAD);
 		const leftSide = factor * Math.sin(rightAngle * DEG_TO_RAD);
+		const userDist = USER_DISTANCE * userDistance / 100;
+		console.log(userDist);
 		// Law of Sines 
-		factor = DISTANCE / 2.0 / Math.sin(thirdAngle / 2.0 * DEG_TO_RAD);
+		factor = userDist / Math.sin(thirdAngle * userDistance / 100 * DEG_TO_RAD);
 		setDistanceSin(factor * Math.sin(leftAngle * DEG_TO_RAD));
 		// Law of Cosines
-		let output = Math.pow(leftSide, 2) + Math.pow(DISTANCE / 2, 2);
-		output = output - (leftSide * DISTANCE * Math.cos(leftAngle * DEG_TO_RAD));
+		let output = Math.pow(leftSide, 2) + Math.pow(userDist, 2);
+		output = output - (2 * leftSide * userDist * Math.cos(leftAngle * DEG_TO_RAD));
 		setDistanceCos(Math.sqrt(output));
 	}
 	
@@ -114,6 +118,7 @@ function App() {
 			<ControlButtons keyHost={hostKey} isRight={moveRight} updateCam={setMoveRight}
 				leftAngle={leftAngle} updateLeft={setLeftAngle}
 				rightAngle={rightAngle} updateRight={setRightAngle} calcFunc={CalcDistance}/>
+			<ControlSlider distance={USER_DISTANCE} userPosition={userDistance} setUserPosition={setUserDistance} />
 			<OutputTable leftAngle={leftAngle} rightAngle={rightAngle} sin={distanceSin} cos={distanceCos}/>
 		</div>
 	</div>
