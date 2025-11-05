@@ -23,6 +23,10 @@ func _ready():
 	middle_point_label.text = "X: %d Y: %d" % [middle_point.position.x, middle_point.position.y]
 	target_point_label.text = "X: %d Y: %d" % [target_point.position.x, target_point.position.y]
 
+func _input(event: InputEvent):
+	if event is InputEventMouseButton && event.is_pressed():
+		target_point.position = get_local_mouse_position()
+
 func _process(delta):
 	rotate_line(delta)
 	if Input.is_action_just_pressed("ui_accept"):
