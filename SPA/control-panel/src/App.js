@@ -107,6 +107,17 @@ function App() {
 		});
 	});
 	
+	function NoHostKey() {
+		console.log(hostKey);
+		if (hostKey < 2137) {
+			return (<div>
+				<h3 className="NoHostLabel"> Host taken, refresh site after last host disconnects </h3>
+			</div>);
+		}
+		return null;
+			
+	}
+	
 	return (
 	<div className="App">
 		<div className="App-body App-head">
@@ -114,11 +125,12 @@ function App() {
 			Distance Triangulation
 		</div>
 		<div className="App-body">
+			<NoHostKey />
 			<CameraFeed isRight={moveRight} />
 			<ControlButtons keyHost={hostKey} isRight={moveRight} updateCam={setMoveRight}
 				leftAngle={leftAngle} updateLeft={setLeftAngle}
 				rightAngle={rightAngle} updateRight={setRightAngle} calcFunc={CalcDistance}/>
-			<ControlSlider distance={USER_DISTANCE} userPosition={userDistance} setUserPosition={setUserDistance} />
+			<ControlSlider disabled={hostKey < 2137} distance={USER_DISTANCE} userPosition={userDistance} setUserPosition={setUserDistance} />
 			<OutputTable leftAngle={leftAngle} rightAngle={rightAngle} sin={distanceSin} cos={distanceCos}/>
 		</div>
 	</div>

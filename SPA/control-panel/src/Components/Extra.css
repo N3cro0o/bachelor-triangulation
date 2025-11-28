@@ -8,6 +8,10 @@
 	width: 80%;
 }
 
+.NoHostLabel {
+	color: #2196F3;
+}
+
 .Center {
 	justify-content: center;
 }
@@ -23,6 +27,8 @@
 	align-items: center;
 	z-index: 100;
 	position: relative;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .CamCrosshair {

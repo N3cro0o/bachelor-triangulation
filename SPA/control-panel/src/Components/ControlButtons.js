@@ -3,10 +3,14 @@ import './Extra.css';
 import Button from '@mui/material/Button';
 
 function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rightAngle, updateRight, calcFunc}) {
+	
+	var check = keyHost < 2137;
+	
 	return (
 		<div className="Wide">
 			<div className="ButtonPanel Center">
 				<Button variant="contained" className="ControlButton"
+					disabled={check}
 					onClick={(e) => {
 						let value;
 						if (e.shiftKey){
@@ -53,6 +57,7 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 					Next camera
 				</Button>
 				<Button variant="contained" className="ControlButton"
+					disabled={check}
 					onClick={(e) => {
 						let value;
 						if (e.shiftKey){
@@ -94,6 +99,7 @@ function ControlButtons({keyHost, isRight, updateCam, leftAngle, updateLeft, rig
 			</div>
 			<div className="ButtonPanel Center">
 				<Button variant="contained" className="ControlButton"
+					disabled={check}
 					onClick={() => {
 						calcFunc();
 					}}

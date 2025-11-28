@@ -8,7 +8,7 @@ import FilledInput from '@mui/material/FilledInput';
 
 const ERROR = 10;
 
-function ControlSlider ({distance, userPosition, setUserPosition}) {
+function ControlSlider ({disabled, distance, userPosition, setUserPosition}) {
 	
 	const handleChange = (event: Event, newValue: number) => {
 		setUserPosition(newValue);
@@ -28,6 +28,7 @@ function ControlSlider ({distance, userPosition, setUserPosition}) {
 				value={userPosition} 
 				onChange={handleChange} 
 				valueLabelDisplay="auto"
+				disabled = {disabled}
 				/>
 		</div>
 	);
