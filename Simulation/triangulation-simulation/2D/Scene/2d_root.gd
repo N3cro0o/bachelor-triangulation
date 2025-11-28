@@ -26,6 +26,7 @@ func _ready():
 func _input(event: InputEvent):
 	if event is InputEventMouseButton && event.is_pressed():
 		target_point.position = get_local_mouse_position()
+		target_point_label.text = "X: %d Y: %d" % [target_point.position.x, target_point.position.y]
 
 func _process(delta):
 	rotate_line(delta)
@@ -71,13 +72,13 @@ func get_result():
 	label.text += "\nNew angle: %f, New factor: %f" % [middle_angle, factor]
 	var real_distance = middle_point.position.distance_to(target_point.position)
 	label.text += "\nDistance: %f" % [factor * sines[0]]
-	label.text += "\nReal Distance: %f, Offset: %f (%d%%)" % [real_distance, abs(factor * sines[0] - real_distance),
+	label.text += "\nReal Distance: %f, Offset: %f (%1.3f%%)" % [real_distance, abs(factor * sines[0] - real_distance),
 			abs(factor * sines[0] - real_distance) / real_distance * 100]
 	
 	label.text += "\n\nCosine calculations:"
 	var dist = sqrt(pow(left_side, 2) + pow(distance / 2, 2) - (left_side * distance * cos(deg_to_rad(line_rotation[0]))))
 	label.text += "\nDistance: %f" % [dist]
-	label.text += "\nReal Distance: %f, Offset: %f (%d%%)" % [real_distance, abs(dist - real_distance),
+	label.text += "\nReal Distance: %f, Offset: %f (%1.3f%%)" % [real_distance, abs(dist - real_distance),
 			abs(dist - real_distance) / real_distance * 100]
 
 func get_best_result():
