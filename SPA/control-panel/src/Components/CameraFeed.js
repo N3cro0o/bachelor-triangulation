@@ -24,7 +24,7 @@ function CameraFeed({isRight}) {
 					{CameraName(isRight)}
 				</div>
 				<div className="CamPanel">
-					<iframe className="CamFrame CamLeft" height="640" width="480" style={{zIndex:3}} src="/cam-api/cam0/">
+					<iframe className="CamFrame CamLeft" height="640" width="480" style={{zIndex:3}} src="http://192.168.137.88:8889/cam0/">
 					</iframe>
 					<img src={cross} className="CamCrosshair" />
 				</div>
@@ -38,7 +38,7 @@ function CameraFeed({isRight}) {
 					{CameraName(isRight)}
 				</div>
 				<div className="CamPanel">
-					<iframe className="CamFrame CamRight" height="640" width="480" style={{zIndex:3}} src="/cam-api/cam1/">
+					<iframe className="CamFrame CamRight" height="640" width="480" style={{zIndex:3}} src="http://192.168.137.88:8889/cam1/">
 					</iframe>
 					<img src={cross} className="CamCrosshair" />
 				</div>
