@@ -92,7 +92,7 @@ async fn move_servo (mut req: Request<(ServerState)>) -> tide::Result {
 		
 		return Ok(format!("Moved {which_servo} servo to angle: {angle}").into());
 	}
-	let mut response = Response::new(418);
+	let mut response = Response::new(401);
 	response.set_body("Wrong HOST KEY.");
 	Ok(response)
 }
@@ -114,15 +114,15 @@ async fn reset_servo (mut req: Request<(ServerState)>) -> tide::Result {
 		std::thread::sleep(time::Duration::from_millis(100));
 		return Ok(String::from("Operation done!").into());
 	}
-	let mut response = Response::new(418);
+	let mut response = Response::new(401);
 	response.set_body("Wrong HOST KEY.");
 	Ok(response)
 }
 
 async fn host_check(req: Request<(ServerState)>) -> tide::Result {
-	let mut response = Response::new(202);
+	let mut response = Response::new(200);
 	if req.state().host.load(Ordering::SeqCst) {
-		response.set_status(418);
+		response.set_status(409);
 		response.set_body("Host already exists.");
 		return Ok(response);
 	}
@@ -131,9 +131,9 @@ async fn host_check(req: Request<(ServerState)>) -> tide::Result {
 }
 
 async fn host_get(req: Request<(ServerState)>) -> tide::Result {
-	let mut response = Response::new(202);
+	let mut response = Response::new(200);
 	if req.state().host.load(Ordering::SeqCst) {
-		response.set_status(403);
+		response.set_status(409);
 		response.set_body("Host already exists.");
 		return Ok(response);
 	}
